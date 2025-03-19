@@ -21,7 +21,7 @@ unzip '*.zip'
 
 ## Configuration
 
-See [`configs/eval/all_benchmarks.json`] for an example of evaluation configurations on all benchmarks. You can modify this file to evaluate on different benchmarks or different baselines.
+See [`configs/eval/all_benchmarks.json`](../configs/eval/all_benchmarks.json) for an example of evaluation configurations on all benchmarks. You can modify this file to evaluate on different benchmarks or different baselines.
 
 ## Baseline
 
