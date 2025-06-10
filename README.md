@@ -4,7 +4,7 @@
 
 <a href="https://arxiv.org/abs/2410.19115"><img src='https://img.shields.io/badge/arXiv-Paper-red?logo=arxiv&logoColor=white' alt='arXiv'></a>
 <a href='https://wangrc.site/MoGePage/'><img src='https://img.shields.io/badge/Project_Page-Website-green?logo=googlechrome&logoColor=white' alt='Project Page'></a>
-<a href='https://huggingface.co/spaces/Ruicheng/MoGe'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live_Demo-blue'></a>
+<a href='https://huggingface.co/spaces/Ruicheng/MoGe'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live_Demo_(MoGe_v1)-blue'></a>
 
 
 </div>
@@ -30,10 +30,10 @@ MoGe is a powerful model for recovering 3D geometry from monocular open-domain i
 * ❗**Released MoGe-2**, a state-of-the-art model for monocular **metric-scale** geometry, with these capabilities in one unified model:
   * comparable and even better performance over MoGe-1;
   * significant improvement of **visual sharpness**;
-  * high-quality **normal map** estimation "for free". (quantitative eval coming);
+  * high-quality **normal map** estimation "for free". (quantitative eval coming soon);
   * lower inference latency.
 
-  Paper coming soon. stay tuned!
+  Paper coming soon. Stay tuned!
 
 ## 📦 Installation
 
