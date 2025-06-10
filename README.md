@@ -23,7 +23,7 @@ MoGe is a powerful model for recovering 3D geometry from monocular open-domain i
 * **Flexible resolution support**: Works seamlessly with various resolutions and aspect ratios, from 2:1 to 1:2.
 * **Optimized for speed**: Achieves 60ms latency per image (A100 or RTX3090, FP16, ViT-L). Adjustable inference resolution for even faster speed.
 
-## 🆕 News
+## ✨ News
 
 ***(2025-06-10)***
 
@@ -106,7 +106,7 @@ Our pretrained models are available on the huggingface hub:
 
 > NOTE: `moge-2-vitl` and `moge-2-vitl-normal` have almost the same level of performance, except for normal map estimation.
 
-You may import the `MoGeModel` class of the matched version, then load the pretrained weights via `MoGeModel.from_pretrained("Ruicheng/moge-vitl")` with automatic downloading.
+You may import the `MoGeModel` class of the matched version, then load the pretrained weights via `MoGeModel.from_pretrained("HUGGING_FACE_MODEL_REPO_NAME")` with automatic downloading.
 If loading a local checkpoint, replace the model name with the local path.
 
 
@@ -125,7 +125,7 @@ device = torch.device("cuda")
 # Load the model from huggingface hub (or load from local).
 model = MoGeModel.from_pretrained("Ruicheng/moge-2-vitl-normal").to(device)                             
 
-# Read the input image and convert to tensor (3, H, W) and normalize to [0, 1]
+# Read the input image and convert to tensor (3, H, W) with RGB values normalized to [0, 1]
 input_image = cv2.cvtColor(cv2.imread("PATH_TO_IMAGE.jpg"), cv2.COLOR_BGR2RGB)                       
 input_image = torch.tensor(input_image / 255, dtype=torch.float32, device=device).permute(2, 0, 1)    
 
@@ -179,7 +179,7 @@ For detailed options, run `moge infer --help`:
 ```
 Usage: moge infer [OPTIONS]
 
-  Inference script for the MoGe model.
+  Inference script
 
 Options:
   -i, --input PATH            Input image or folder path. "jpg" and "png" are
@@ -188,12 +188,12 @@ Options:
                               horizontal field of view in degrees. Otherwise,
                               MoGe will estimate it.
   -o, --output PATH           Output folder path
-  --version TEXT              Version of MoGe model. Defaults to "v2"
-  --pretrained TEXT           Pretrained model name or path. Defaults to
-                              "Ruicheng/moge-vitl"
+  --pretrained TEXT           Pretrained model name or path. If not provided,
+                              the corresponding default model will be chosen.
+  --version [v1|v2]           Model version. Defaults to "v2"
   --device TEXT               Device name (e.g. "cuda", "cuda:0", "cpu").
                               Defaults to "cuda"
-  --fp16                      Use fp16 precision for 2x faster inference.
+  --fp16                      Use fp16 precision for much faster inference.
   --resize INTEGER            Resize the image(s) & output maps to a specific
                               size. Defaults to None (no resizing).
   --resolution_level INTEGER  An integer [0-9] for the resolution level for
@@ -208,11 +208,11 @@ Options:
                               in the (suggested) range of `[1200, 2500]`.
                               `resolution_level` will be ignored if
                               `num_tokens` is provided. Default: None
-  --threshold FLOAT           Threshold for removing edges. Defaults to 0.03.
+  --threshold FLOAT           Threshold for removing edges. Defaults to 0.01.
                               Smaller value removes more edges. "inf" means no
                               thresholding.
-  --maps                      Whether to save the output maps and fov(image,
-                              depth, mask, points, fov).
+  --maps                      Whether to save the output maps (image, point
+                              map, depth map, normal map, mask) and fov.
   --glb                       Whether to save the output as a.glb file. The
                               color will be saved as a texture.
   --ply                       Whether to save the output as a.ply file. The
