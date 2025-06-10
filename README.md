@@ -21,7 +21,7 @@ MoGe is a powerful model for recovering 3D geometry from monocular open-domain i
 
 * **Optional ground-truth FOV input**: Enhance model accuracy further by providing the true field of view.
 * **Flexible resolution support**: Works seamlessly with various resolutions and aspect ratios, from 2:1 to 1:2.
-* **Optimized for speed**: Achieves 55ms latency per image on an A100 / RTX 3090 GPU. Adjustable inference resolution for even faster speed.
+* **Optimized for speed**: Achieves 60ms latency per image (A100 or RTX3090, FP16, ViT-L). Adjustable inference resolution for even faster speed.
 
 ## 🆕 News
 
@@ -149,11 +149,11 @@ For more usage details, see the `MoGeModel.infer()` docstring.
 
 ### Gradio demo | `moge app`
 
-The demo is also available at our [Hugging Face space](https://huggingface.co/spaces/Ruicheng/MoGe).
+> The demo for MoGe-1 is also available at our [Hugging Face Space](https://huggingface.co/spaces/Ruicheng/MoGe).
 
 ```bash
 # Using the command line tool
-moge app
+moge app        # will run MoGe-2 demo by default.
 
 # In this repo
 python moge/scripts/app.py   # --share for Gradio public sharing
