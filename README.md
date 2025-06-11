@@ -27,7 +27,8 @@ MoGe is a powerful model for recovering 3D geometry from monocular open-domain i
 
 ***(2025-06-10)***
 
-* ❗**Released MoGe-2**, a state-of-the-art model for monocular **metric-scale** geometry, with these capabilities in one unified model:
+* ❗**Released MoGe-2**, a state-of-the-art model for monocular geometry, with these new capabilities in one unified model:
+  * point map prediction in **metric scale**;
   * comparable and even better performance over MoGe-1;
   * significant improvement of **visual sharpness**;
   * high-quality **normal map** estimation "for free". (quantitative eval coming soon);
