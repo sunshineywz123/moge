@@ -105,7 +105,7 @@ Our pretrained models are available on the huggingface hub:
 </table>
 
 
-> NOTE: `moge-2-vitl` and `moge-2-vitl-normal` have almost the same level of performance, except for normal map estimation.
+> NOTE: `moge-2-vitl-normal` has full capabilities, with almost the same level of performance as `moge-2-vitl` plus extra normal map estimation.
 
 You may import the `MoGeModel` class of the matched version, then load the pretrained weights via `MoGeModel.from_pretrained("HUGGING_FACE_MODEL_REPO_NAME")` with automatic downloading.
 If loading a local checkpoint, replace the model name with the local path.
