@@ -1,24 +1,34 @@
+# MoGe: Accurate Monocular Geometry Estimation
+
+MoGe is a powerful model for recovering 3D geometry from monocular open-domain images, including metric point maps, metric depth maps, normal maps and camera FOV. ***Check our websites ([MoGe-1](https://wangrc.site/MoGePage), [MoGe-2](https://wangrc.site/MoGePage)) for videos and interactive results!***
+
+## 📖 Publications
+
+### MoGe-2: Accurate Monocular Geometry with Metric Scale and Sharp Details
+
 <div align="center">
+  <a href="https://arxiv.org/abs/2507.02546"><img src='https://img.shields.io/badge/arXiv-Paper-red?logo=arxiv&logoColor=white' alt='arXiv'></a>
+  <a href='https://wangrc.site/MoGe2Page/'><img src='https://img.shields.io/badge/Project_Page-Website-green?logo=googlechrome&logoColor=white' alt='Project Page'></a>
+  <a href='https://huggingface.co/spaces/Ruicheng/MoGe-2'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo_(MoGe_v2)-blue'></a>
 
-# MoGe: Unlocking Accurate Monocular Geometry Estimation for Open-Domain Images with Optimal Training Supervision
+https://github.com/user-attachments/assets/8f9ae680-659d-4f7f-82e2-b9ed9d6b988a
 
-<a href="https://arxiv.org/abs/2410.19115"><img src='https://img.shields.io/badge/arXiv-Paper-red?logo=arxiv&logoColor=white' alt='arXiv'></a>
-<a href='https://wangrc.site/MoGePage/'><img src='https://img.shields.io/badge/Project_Page-Website-green?logo=googlechrome&logoColor=white' alt='Project Page'></a>
-<a href='https://huggingface.co/spaces/Ruicheng/MoGe'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live_Demo_(MoGe_v1)-blue'></a>
+</div>
 
+### MoGe: Unlocking Accurate Monocular Geometry Estimation for Open-Domain Images with Optimal Training Supervision
 
+<div align="center">
+  <a href="https://arxiv.org/abs/2410.19115"><img src='https://img.shields.io/badge/arXiv-Paper-red?logo=arxiv&logoColor=white' alt='arXiv'></a>
+  <a href='https://wangrc.site/MoGePage/'><img src='https://img.shields.io/badge/Project_Page-Website-green?logo=googlechrome&logoColor=white' alt='Project Page'></a>
+  <a href='https://huggingface.co/spaces/Ruicheng/MoGe'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo_(MoGe_v1)-blue'></a>
 </div>
 
 <img src="./assets/overview_simplified.png" width="100%" alt="Method overview" align="center">
 
-MoGe is a powerful model for recovering 3D geometry from monocular open-domain images. The model consists of a ViT encoder and a convolutional decoder. It directly predicts an affine-invariant point map as well as a mask that excludes regions with undefined geometry (e.g., sky), from which the camera shift, camera focal length and depth map can be further derived. 
-
-***Check our [website](https://wangrc.site/MoGePage) for videos and interactive results!***
 
 ## 🌟 Features
 
-* **Accurate 3D geometry estimation**: Estimate point maps from open-domain  single images with high precision. ***❗<span style='color:red'>New:</span> MoGe-2 estimates the point map in metric scale.***
-
+* **Accurate 3D geometry estimation**: Estimate point maps & depth maps & [normal maps](docs/normal.md) from open-domain single images with high precision -- all capabilities in one model, one forward pass.
 * **Optional ground-truth FOV input**: Enhance model accuracy further by providing the true field of view.
 * **Flexible resolution support**: Works seamlessly with various resolutions and aspect ratios, from 2:1 to 1:2.
 * **Optimized for speed**: Achieves 60ms latency per image (A100 or RTX3090, FP16, ViT-L). Adjustable inference resolution for even faster speed.
@@ -31,10 +41,8 @@ MoGe is a powerful model for recovering 3D geometry from monocular open-domain i
   * point map prediction in **metric scale**;
   * comparable and even better performance over MoGe-1;
   * significant improvement of **visual sharpness**;
-  * high-quality **normal map** estimation "for free". (quantitative eval coming soon);
+  * high-quality [**normal map** estimation](docs/normal.md);
   * lower inference latency.
-
-  Paper coming soon. Stay tuned!
 
 ## 📦 Installation
 
@@ -271,5 +279,15 @@ If you find our work useful in your research, we gratefully request that you con
     archivePrefix={arXiv},
     primaryClass={cs.CV},
     url={https://arxiv.org/abs/2410.19115}, 
+}
+
+@misc{wang2025moge2,
+      title={MoGe-2: Accurate Monocular Geometry with Metric Scale and Sharp Details}, 
+      author={Ruicheng Wang and Sicheng Xu and Yue Dong and Yu Deng and Jianfeng Xiang and Zelong Lv and Guangzhong Sun and Xin Tong and Jiaolong Yang},
+      year={2025},
+      eprint={2507.02546},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2507.02546}, 
 }
 ```

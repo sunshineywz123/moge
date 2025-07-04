@@ -85,13 +85,13 @@ def main(share: bool, pretrained_model_name_or_path: str, model_version: str, us
 
         height, width = image.shape[:2]
 
-        resolution_level_int = {'Low': 0, 'Medium': 5, 'High': 9, 'Ultra': 18}.get(resolution_level, 9)
+        resolution_level_int = {'Low': 0, 'Medium': 5, 'High': 9, 'Ultra': 30}.get(resolution_level, 9)
         output = run_with_gpu(image, resolution_level_int, apply_mask)
 
         points, depth, mask, normal = output['points'], output['depth'], output['mask'], output.get('normal', None)
 
         if remove_edge:
-            mask_cleaned = mask & ~depth_occlusion_edge_numpy(depth, mask, tol=2 / max(image.shape[:2]), thickness=2)
+            mask_cleaned = mask & ~utils3d.numpy.depth_edge(depth, rtol=0.04)
         else:
             mask_cleaned = mask
         
