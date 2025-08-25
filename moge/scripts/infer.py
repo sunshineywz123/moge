@@ -28,7 +28,7 @@ Defaults to 9. Note that it is irrelevant to the output size, which is always th
 `resolution_level` actually controls `num_tokens`. See `num_tokens` for more details.')
 @click.option('--num_tokens', type=int, default=None, help='number of tokens used for inference. A integer in the (suggested) range of `[1200, 2500]`. \
 `resolution_level` will be ignored if `num_tokens` is provided. Default: None')
-@click.option('--threshold', type=float, default=0.01, help='Threshold for removing edges. Defaults to 0.01. Smaller value removes more edges. "inf" means no thresholding.')
+@click.option('--threshold', type=float, default=0.04, help='Threshold for removing edges. Defaults to 0.01. Smaller value removes more edges. "inf" means no thresholding.')
 @click.option('--maps', 'save_maps_', is_flag=True, help='Whether to save the output maps (image, point map, depth map, normal map, mask) and fov.')
 @click.option('--glb', 'save_glb_', is_flag=True, help='Whether to save the output as a.glb file. The color will be saved as a texture.')
 @click.option('--ply', 'save_ply_', is_flag=True, help='Whether to save the output as a.ply file. The color will be saved as vertex colors.')
@@ -145,9 +145,7 @@ def main(
 
         # 如果需要导出网格或可视化
         if save_glb_ or save_ply_ or show:
-            # 清理mask,移除深度边缘
-            mask_cleaned = mask & ~utils3d.numpy.depth_edge(depth, rtol=0.04)
-            # 如果没有法线信息
+            mask_cleaned = mask & ~utils3d.numpy.depth_edge(depth, rtol=threshold)
             if normal is None:
                 # 生成不带法线的网格
                 faces, vertices, vertex_colors, vertex_uvs = utils3d.numpy.image_mesh(

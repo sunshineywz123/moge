@@ -1,6 +1,6 @@
 # MoGe: Accurate Monocular Geometry Estimation
 
-MoGe is a powerful model for recovering 3D geometry from monocular open-domain images, including metric point maps, metric depth maps, normal maps and camera FOV. ***Check our websites ([MoGe-1](https://wangrc.site/MoGePage), [MoGe-2](https://wangrc.site/MoGePage)) for videos and interactive results!***
+MoGe is a powerful model for recovering 3D geometry from monocular open-domain images, including metric point maps, metric depth maps, normal maps and camera FOV. ***Check our websites ([MoGe-1](https://wangrc.site/MoGePage), [MoGe-2](https://wangrc.site/MoGe2Page)) for videos and interactive results!***
 
 ## 📖 Publications
 
@@ -118,6 +118,7 @@ Our pretrained models are available on the huggingface hub:
 You may import the `MoGeModel` class of the matched version, then load the pretrained weights via `MoGeModel.from_pretrained("HUGGING_FACE_MODEL_REPO_NAME")` with automatic downloading.
 If loading a local checkpoint, replace the model name with the local path.
 
+For ONNX support, please refer to [docs/onnx.md](docs/onnx.md).
 
 ## 💡 Minimal Code Example 
 
