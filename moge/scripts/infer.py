@@ -78,43 +78,64 @@ def main(
 
     if pretrained_model_name_or_path is None:
         DEFAULT_PRETRAINED_MODEL_FOR_EACH_VERSION = {
-            "v1": "Ruicheng/moge-vitl",
-            "v2": "Ruicheng/moge-2-vitl-normal",
+            # "v1": "Ruicheng/moge-vitl",
+            # "v2": "Ruicheng/moge-2-vitl-normal",
+            "v1":"../ckpt/models--Ruicheng--moge-vitl/snapshots/979e84da9415762c30e6c0cf8dc0962896c793df/model.pt",
+            # "v2":"../ckpt/models--Ruicheng--moge-2-vitl/snapshots/39c4d5e957afe587e04eec59dc2bcc3be5ecd968/model.pt",
+            "v2":"../ckpt/models--Ruicheng--moge-2-vitl-normal/snapshots/0bdb276175f26d5fa71ef04cf9b8238655c04ee8/model.pt",
         }
         pretrained_model_name_or_path = DEFAULT_PRETRAINED_MODEL_FOR_EACH_VERSION[model_version]
+    # 从预训练模型加载模型,并移至指定设备,设置为评估模式
     model = import_model_class_by_version(model_version).from_pretrained(pretrained_model_name_or_path).to(device).eval()
+    # 如果启用FP16,将模型转换为半精度
     if use_fp16:
         model.half()
     
+    # 如果没有指定任何输出格式,发出警告并默认保存所有格式
     if not any([save_maps_, save_glb_, save_ply_]):
         warnings.warn('No output format specified. Defaults to saving all. Please use "--maps", "--glb", or "--ply" to specify the output.')
         save_maps_ = save_glb_ = save_ply_ = True
 
+    # 遍历所有输入图像进行推理
     for image_path in (pbar := tqdm(image_paths, desc='Inference', disable=len(image_paths) <= 1)):
+        # 读取图像并转换为RGB格式
         image = cv2.cvtColor(cv2.imread(str(image_path)), cv2.COLOR_BGR2RGB)
+        # 获取图像高度和宽度
         height, width = image.shape[:2]
+        # 如果指定了resize_to,按比例调整图像大小
         if resize_to is not None:
             height, width = min(resize_to, int(resize_to * height / width)), min(resize_to, int(resize_to * width / height))
             image = cv2.resize(image, (width, height), cv2.INTER_AREA)
+        # 将图像转换为张量格式并归一化
         image_tensor = torch.tensor(image / 255, dtype=torch.float32, device=device).permute(2, 0, 1)
 
-        # Inference
+        # 模型推理
         output = model.infer(image_tensor, fov_x=fov_x_, resolution_level=resolution_level, num_tokens=num_tokens, use_fp16=use_fp16)
+        # 从输出中提取各种信息并转移到CPU
         points, depth, mask, intrinsics = output['points'].cpu().numpy(), output['depth'].cpu().numpy(), output['mask'].cpu().numpy(), output['intrinsics'].cpu().numpy()
+        # 如果输出包含法线信息,提取法线
         normal = output['normal'].cpu().numpy() if 'normal' in output else None
 
+        # 创建保存路径
         save_path = Path(output_path, image_path.relative_to(input_path).parent, image_path.stem)
         save_path.mkdir(exist_ok=True, parents=True)
 
-        # Save images / maps
+        # 保存图像和各种map
         if save_maps_:
+            # 保存原始图像
             cv2.imwrite(str(save_path / 'image.jpg'), cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
+            # 保存深度图可视化结果
             cv2.imwrite(str(save_path / 'depth_vis.png'), cv2.cvtColor(colorize_depth(depth), cv2.COLOR_RGB2BGR))
+            # 保存原始深度图
             cv2.imwrite(str(save_path / 'depth.exr'), depth, [cv2.IMWRITE_EXR_TYPE, cv2.IMWRITE_EXR_TYPE_FLOAT])
+            # 保存mask
             cv2.imwrite(str(save_path / 'mask.png'), (mask * 255).astype(np.uint8))
+            # 保存点云数据
             cv2.imwrite(str(save_path / 'points.exr'), cv2.cvtColor(points, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_EXR_TYPE, cv2.IMWRITE_EXR_TYPE_FLOAT])
+            # 如果有法线信息,保存法线图
             if normal is not None:
                 cv2.imwrite(str(save_path / 'normal.png'), cv2.cvtColor(colorize_normal(normal), cv2.COLOR_RGB2BGR))
+            # 计算并保存视场角信息
             fov_x, fov_y = utils3d.numpy.intrinsics_to_fov(intrinsics)
             with open(save_path / 'fov.json', 'w') as f:
                 json.dump({
@@ -122,10 +143,13 @@ def main(
                     'fov_y': round(float(np.rad2deg(fov_y)), 2),
                 }, f)
 
-        # Export mesh & visulization
+        # 如果需要导出网格或可视化
         if save_glb_ or save_ply_ or show:
+            # 清理mask,移除深度边缘
             mask_cleaned = mask & ~utils3d.numpy.depth_edge(depth, rtol=0.04)
+            # 如果没有法线信息
             if normal is None:
+                # 生成不带法线的网格
                 faces, vertices, vertex_colors, vertex_uvs = utils3d.numpy.image_mesh(
                     points,
                     image.astype(np.float32) / 255,
@@ -135,6 +159,7 @@ def main(
                 )
                 vertex_normals = None
             else:
+                # 生成带法线的网格
                 faces, vertices, vertex_colors, vertex_uvs, vertex_normals = utils3d.numpy.image_mesh(
                     points,
                     image.astype(np.float32) / 255,
@@ -143,12 +168,12 @@ def main(
                     mask=mask_cleaned,
                     tri=True
                 )
-            # When exporting the model, follow the OpenGL coordinate conventions:
-            # - world coordinate system: x right, y up, z backward.
-            # - texture coordinate system: (0, 0) for left-bottom, (1, 1) for right-top.
-            vertices, vertex_uvs = vertices * [1, -1, -1], vertex_uvs * [1, -1] + [0, 1]
-            if normal is not None:
-                vertex_normals = vertex_normals * [1, -1, -1]
+            # # When exporting the model, follow the OpenGL coordinate conventions:
+            # # - world coordinate system: x right, y up, z backward.
+            # # - texture coordinate system: (0, 0) for left-bottom, (1, 1) for right-top.
+            # vertices, vertex_uvs = vertices * [1, -1, -1], vertex_uvs * [1, -1] + [0, 1]
+            # if normal is not None:
+            #     vertex_normals = vertex_normals * [1, -1, -1]
 
         if save_glb_:
             save_glb(save_path / 'mesh.glb', vertices, faces, vertex_uvs, image, vertex_normals)
