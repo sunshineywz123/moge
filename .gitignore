@@ -421,3 +421,8 @@ FodyWeavers.xsd
 /pretrained
 /.gradio
 /tmp
+2025_01_10_10_03_03_AutoCollect_pilotGtRawParser_output/*
+save/*
+save1/*
+save_opencv*
+save*
